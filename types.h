@@ -22,7 +22,7 @@ struct SUPEMON {
 struct JOUEUR {
     char name_player[30];
     int Supecoins;
-    SUPEMON supemons[MAX_SUPEMON];
+    struct SUPEMON supemons[MAX_SUPEMON];
     int nb_supemons;
     char items[MAX_ITEMS][30];
     int nb_items;
