@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "types.h"
+#include "menu.h"
 
 void player_info(struct JOUEUR *player) {
     printf("Enter you player name : "); scanf("%29s", player->name_player);
@@ -32,7 +33,7 @@ void starter_choice(struct SUPEMON *supemon) {
             supemon-> evasion = 1;
             supemon-> accuracy = 2;
             supemon-> speed = 1;
-            printf("Your Supemon HP are %d, Attack = %d, Defense = %d, Evasion = %d, Accuracy = %d, Speed = %d", supemon->HP,supemon->attack,supemon->defense,supemon->evasion,supemon->accuracy,supemon->speed);
+            printf("Your Supemon HP are %d, Attack = %d, Defense = %d, Evasion = %d, Accuracy = %d, Speed = %d\n", supemon->HP,supemon->attack,supemon->defense,supemon->evasion,supemon->accuracy,supemon->speed);
             break;
         case 2:
             printf("You choose Supasaur as your starter Supemon \n");
@@ -43,7 +44,7 @@ void starter_choice(struct SUPEMON *supemon) {
             supemon-> evasion = 3;
             supemon-> accuracy = 2;
             supemon-> speed = 2;
-            printf("Your Supemon HP are %d, Attack = %d, Defense = %d, Evasion = %d, Accuracy = %d, Speed = %d", supemon->HP,supemon->attack,supemon->defense,supemon->evasion,supemon->accuracy,supemon->speed);
+            printf("Your Supemon HP are %d, Attack = %d, Defense = %d, Evasion = %d, Accuracy = %d, Speed = %d\n", supemon->HP,supemon->attack,supemon->defense,supemon->evasion,supemon->accuracy,supemon->speed);
             break;
         case 3:
             printf("You chose Supirtle as your starter Supemon \n");
@@ -54,7 +55,7 @@ void starter_choice(struct SUPEMON *supemon) {
             supemon-> evasion = 2;
             supemon-> accuracy = 1;
             supemon-> speed = 2;
-            printf("Your Supemon HP are %d, Attack = %d, Defense = %d, Evasion = %d, Accuracy = %d, Speed = %d", supemon->HP,supemon->attack,supemon->defense,supemon->evasion,supemon->accuracy,supemon->speed);
+            printf("Your Supemon HP are %d, Attack = %d, Defense = %d, Evasion = %d, Accuracy = %d, Speed = %d\n", supemon->HP,supemon->attack,supemon->defense,supemon->evasion,supemon->accuracy,supemon->speed);
             break;
         }
     }
@@ -65,5 +66,6 @@ int main() {
     struct SUPEMON starter;
     player_info(&player);
     starter_choice(&starter);
-
+    game_loop();
+    system("pause");
 }
