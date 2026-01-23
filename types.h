@@ -17,6 +17,8 @@ struct SUPEMON {
     int accuracy;
     int base_accuracy;
     int speed;
+    int evasion;
+    int base_evasion;
 };
 
 struct JOUEUR {
