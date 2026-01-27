@@ -67,5 +67,4 @@ int main() {
     player_info(&player);
     starter_choice(&starter);
     game_loop();
-    system("pause");
 }
