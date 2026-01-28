@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "types.h"
 #include "menu.h"
 
@@ -25,7 +26,7 @@ void starter_choice(struct SUPEMON *supemon) {
     switch (choix)
         {
         case 1:
-            printf("You chose Supmander as your starter Supemon \n");
+            strcpy(supemon->name, "Supmander");
             supemon-> level = 1;
             supemon-> HP = 10;
             supemon-> attack = 1;
@@ -33,10 +34,22 @@ void starter_choice(struct SUPEMON *supemon) {
             supemon-> evasion = 1;
             supemon-> accuracy = 2;
             supemon-> speed = 1;
-            printf("Your Supemon HP are %d, Attack = %d, Defense = %d, Evasion = %d, Accuracy = %d, Speed = %d\n", supemon->HP,supemon->attack,supemon->defense,supemon->evasion,supemon->accuracy,supemon->speed);
+
+            supemon->nb_moves = 2;
+            strcpy(supemon->moves[0].name, "Scratch");
+            supemon->moves[0].damage = 3;
+            supemon->moves[0].attack_boost = 0;
+            supemon->moves[0].defense_boost = 0;
+            supemon->moves[0].evasion_boost = 0;
+
+            strcpy(supemon->moves[1].name, "Grawl");
+            supemon->moves[1].damage = 0;
+            supemon->moves[1].attack_boost = 1;
+            supemon->moves[1].defense_boost = 0;
+            supemon->moves[1].evasion_boost = 0;
             break;
         case 2:
-            printf("You choose Supasaur as your starter Supemon \n");
+            strcpy(supemon->name, "Supasaur");
             supemon-> level = 1;
             supemon-> HP = 9;
             supemon-> attack = 1;
@@ -44,10 +57,23 @@ void starter_choice(struct SUPEMON *supemon) {
             supemon-> evasion = 3;
             supemon-> accuracy = 2;
             supemon-> speed = 2;
-            printf("Your Supemon HP are %d, Attack = %d, Defense = %d, Evasion = %d, Accuracy = %d, Speed = %d\n", supemon->HP,supemon->attack,supemon->defense,supemon->evasion,supemon->accuracy,supemon->speed);
+
+            supemon->nb_moves = 2;
+            strcpy(supemon->moves[0].name, "Pound");
+            supemon->moves[0].damage = 2;
+            supemon->moves[0].attack_boost = 0;
+            supemon->moves[0].defense_boost = 0;
+            supemon->moves[0].evasion_boost = 0;
+
+
+            strcpy(supemon->moves[1].name, "Foliage");
+            supemon->moves[1].damage = 0;
+            supemon->moves[1].attack_boost = 0;
+            supemon->moves[1].defense_boost = 0;
+            supemon->moves[1].evasion_boost = 1;
             break;
         case 3:
-            printf("You chose Supirtle as your starter Supemon \n");
+            strcpy(supemon->name, "Supirtle");
             supemon-> level = 1;
             supemon-> HP = 11;
             supemon-> attack = 1;
@@ -55,7 +81,18 @@ void starter_choice(struct SUPEMON *supemon) {
             supemon-> evasion = 2;
             supemon-> accuracy = 1;
             supemon-> speed = 2;
-            printf("Your Supemon HP are %d, Attack = %d, Defense = %d, Evasion = %d, Accuracy = %d, Speed = %d\n", supemon->HP,supemon->attack,supemon->defense,supemon->evasion,supemon->accuracy,supemon->speed);
+
+            strcpy(supemon->moves[0].name, "Pound");
+            supemon->moves[0].damage = 2;
+            supemon->moves[0].attack_boost = 0;
+            supemon->moves[0].defense_boost = 0;
+            supemon->moves[0].evasion_boost = 0;
+
+            strcpy(supemon->moves[1].name, "Shell");
+            supemon->moves[1].damage = 0;
+            supemon->moves[1].attack_boost = 0;
+            supemon->moves[1].defense_boost = 1;
+            supemon->moves[1].evasion_boost = 0;
             break;
         }
     }
