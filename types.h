@@ -3,6 +3,15 @@
 
 #define MAX_SUPEMON 6
 #define MAX_ITEMS 10
+#define MAX_MOVES 4
+
+struct MOVE {
+    char name[30];
+    int damage;
+    int attack_boost;
+    int defense_boost;
+    int evasion_boost;
+};
 
 struct SUPEMON {
     char name[30];
@@ -19,6 +28,8 @@ struct SUPEMON {
     int speed;
     int evasion;
     int base_evasion;
+    struct MOVE moves[MAX_MOVES];
+    int nb_moves;
 };
 
 struct JOUEUR {

@@ -15,22 +15,34 @@ void game_loop() {
     while (choix_dir < 1 || choix_dir > 4) {
         printf("Choose where do you want to go by typing numbers between 1 and 4 :\n"); scanf("%d",&choix_dir);
         if (choix_dir < 1 ||choix_dir > 4) {
-            printf("Invalid choice, please write a number between 1 and 4 : \n");
+            printf("Invalid choice, please write a number between 1 and 4 : ");
         }
     }
     switch (choix_dir)
     {
     case 1:
-        printf("You chose to go Into the Wild");
+        InTheWild();
         break;
     case 2:
-        printf("You chose to go In the shop");
+        InTheShop();
         break;
     case 3:
-        printf("You chose to go In the Supemon Center");
+        SupemonCenter();
         break;
     case 4:
-        printf("You chose to Leave the Game.... Goodbye !!!");
+        printf("You chose to Leave the Game.... Goodbye !!!\n");
         break;
     }
+}
+
+void InTheWild() {
+    printf("You entered the wild ! \n");
+}
+
+void InTheShop() {
+    printf("Welcome to the shop ! \n");
+}
+
+void SupemonCenter() {
+    printf("Welcome to the Supemon Center ! \n");
 }
