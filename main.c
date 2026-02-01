@@ -3,6 +3,7 @@
 #include <string.h>
 #include "types.h"
 #include "menu.h"
+#include "combat.h"
 
 void player_info(struct JOUEUR *player) {
     printf("Enter you player name : "); scanf("%29s", player->name_player);
@@ -103,5 +104,8 @@ int main() {
     struct SUPEMON starter;
     player_info(&player);
     starter_choice(&starter);
-    game_loop();
+    player.supemons[0] = starter;
+    player.nb_supemons = 1;
+    game_loop(&player);
+    return 0;
 }
