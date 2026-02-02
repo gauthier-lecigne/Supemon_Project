@@ -49,5 +49,3 @@ void InTheShop(struct JOUEUR *player) {
 void SupemonCenter(struct JOUEUR *player) {
     printf("Welcome to the Supemon Center ! \n");
 }
-
-// test github 

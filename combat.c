@@ -16,31 +16,68 @@ struct SUPEMON generate_wild(struct SUPEMON *player) {
             wild.HP = 10 * wild.level;
             wild.attack = 1;
             wild.defense = 1;
+            wild.evasion = 1;
+            wild.accuracy = 2;
             wild.speed = 1;
-            wild.nb_moves = 1;
+            wild.nb_moves = 2;
+
             strcpy(wild.moves[0].name, "Scratch");
             wild.moves[0].damage = 3;
+            wild.moves[0].attack_boost = 0;
+            wild.moves[0].defense_boost = 0;
+            wild.moves[0].evasion_boost = 0;
+
+            strcpy(wild.moves[1].name, "Grawl");
+            wild.moves[1].damage = 0;
+            wild.moves[1].attack_boost = 1;
+            wild.moves[1].defense_boost = 0;
+            wild.moves[1].evasion_boost = 0;
             break;
+
         case 1:
             strcpy(wild.name, "Supasaur");
             wild.HP = 9 * wild.level;
             wild.attack = 1;
             wild.defense = 1;
+            wild.evasion = 3;
+            wild.accuracy = 2;
             wild.speed = 2;
-            wild.nb_moves = 1;
+            wild.nb_moves = 2;
+
             strcpy(wild.moves[0].name, "Pound");
             wild.moves[0].damage = 2;
+            wild.moves[0].attack_boost = 0;
+            wild.moves[0].defense_boost = 0;
+            wild.moves[0].evasion_boost = 0;
+
+            strcpy(wild.moves[1].name, "Foliage");
+            wild.moves[1].damage = 0;
+            wild.moves[1].attack_boost = 0;
+            wild.moves[1].defense_boost = 0;
+            wild.moves[1].evasion_boost = 1;
             break;
+
         case 2:
             strcpy(wild.name, "Supirtle");
             wild.HP = 11 * wild.level;
             wild.attack = 1;
             wild.defense = 2;
+            wild.evasion = 2;
+            wild.accuracy = 1;
             wild.speed = 2;
-            wild.nb_moves = 1;
-            strcpy(wild.moves[0].name, "Shell");
-            wild.moves[0].damage = 0;
-            wild.moves[0].defense_boost = 1;
+            wild.nb_moves = 2;
+
+            strcpy(wild.moves[0].name, "Pound");
+            wild.moves[0].damage = 2;
+            wild.moves[0].attack_boost = 0;
+            wild.moves[0].defense_boost = 0;
+            wild.moves[0].evasion_boost = 0;
+
+            strcpy(wild.moves[1].name, "Shell");
+            wild.moves[1].damage = 0;
+            wild.moves[1].attack_boost = 0;
+            wild.moves[1].defense_boost = 1;
+            wild.moves[1].evasion_boost = 0;
             break;
     }
     return wild;
@@ -197,6 +234,11 @@ void fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
             struct MOVE *move = &wild_supemon.moves[move_index];
             int damage = calculate_damage(&wild_supemon, player_supemon, move);
             player_supemon->HP -= damage;
+
+            printf("\n--- ENEMY TURN ---\n");
+        printf("The wild %s used %s!\n", wild_supemon.name, move->name);
+        printf("It dealt %d damage to your %s.\n", damage, player_supemon->name);
+        printf("------------------\n\n");
         }
         who_starts = !who_starts;
     }
