@@ -162,9 +162,10 @@ void player_move(struct SUPEMON *attacker, struct SUPEMON *target) {
 
 
 
-int change_supemon(struct SUPEMON *player_supemons, int nb_supemons) {
+int change_supemon(struct SUPEMON *player_supemons, int nb_supemons, struct JOUEUR *player) {
     if (nb_supemons < 2) {
         printf("You only have one Supemon, you can't change!\n");
+        game_loop(player);
         return -1;
     }
     int choix = 0;
@@ -245,22 +246,11 @@ void use_item(struct JOUEUR *player, int *items_used) {
 }
 
 
-
-
-
-
-
-void run_away(struct JOUEUR *player) {
+int run_away(struct JOUEUR *player) {
     printf("You ran away successfully ! \n");
-    printf("Where do you want to go now ? \n");
-    game_loop(player);
+    return 1;
 
 }
-
-
-
-
-
 
 
 int capture(struct SUPEMON *enemy, struct JOUEUR *player) {
@@ -285,7 +275,7 @@ int capture(struct SUPEMON *enemy, struct JOUEUR *player) {
 }
 
 
-void fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
+int fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
     struct SUPEMON wild_supemon = generate_wild(player_supemon);
     printf("A wild %s appeared !\n", wild_supemon.name);
     int current_player_index = 0;
@@ -308,7 +298,7 @@ void fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
                     break;
                 case 2:
                     {
-                        int new_index = change_supemon(player->supemons, player->nb_supemons);
+                        int new_index = change_supemon(player->supemons, player->nb_supemons, player);
                         if (new_index != -1) {
                             player_supemon = &player->supemons[new_index];
                             printf("You switched to %s ! \n", player_supemon->name);
@@ -320,7 +310,10 @@ void fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
                      break;
                     break;
                 case 4:
-                    run_away(player);
+                    if (run_away(player)) {
+                        game_loop(player);
+                        return 1;
+                    }
                     break;
                 case 5:
                     capture(&wild_supemon, player);
@@ -354,7 +347,7 @@ void fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
                 if (player->nb_supemons < 2) {
                     printf("You have no other Supemon, you have to go to the Supemon Center.\n");
                 }
-                int new_index = change_supemon(player->supemons, player->nb_supemons);
+                int new_index = change_supemon(player->supemons, player->nb_supemons, player);
                 if (new_index != -1) {
                     player_supemon = &player->supemons[new_index];
                     printf("You switched to %s ! \n", player_supemon->name);
