@@ -122,9 +122,8 @@ int player_turn(struct SUPEMON *player) {
         if (choice < 1 || choice > 5) {
             printf("Invalid, please enter a number between 1 and 5\n");
         }
-    return choice;
     }
-
+    return choice;
 }
 
 void player_move(struct SUPEMON *attacker, struct SUPEMON *target) {
@@ -212,8 +211,6 @@ int capture(struct SUPEMON *enemy, struct JOUEUR *player) {
 }
 
 
-
-
 void fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
     struct SUPEMON wild_supemon = generate_wild(player_supemon);
     printf("A wild %s appeared !\n", wild_supemon.name);
@@ -294,8 +291,60 @@ void fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
         }
     } else {
         printf("You defeated the wild %s!\n", wild_supemon.name);
-        player->Supecoins += 100;
-        printf("You won 100 Supecoins! You now have %d Supecoins. \n", player->Supecoins);
+        printf("Before battle: %s is level %d with %d XP\n",player_supemon->name, player_supemon->level, player_supemon->experience);
+        int recompense_supecoins = 100 + rand() % 401;
+        player->Supecoins += recompense_supecoins;
+        printf("You won %d Supecoins! You have now %d Supecoins.\n", recompense_supecoins, player->Supecoins);
+
+        int exp_gain = (100 + rand()% 401) * wild_supemon.level;
+        player_supemon->experience += exp_gain;
+        printf("%s gained %d experience points!\n", player_supemon->name, exp_gain);
+        while(1) {
+            int next_level = 500 + (player_supemon->level - 1) * 1000;
+            if (player_supemon->experience >= next_level) {
+                player_supemon->experience -= next_level;
+                player_supemon->level += 1;
+                printf("%s leveled up to level %d!\n", player_supemon->name, player_supemon->level);
+
+                float temporaire;
+                temporaire = player_supemon->HP * 1.3f;
+                player_supemon->HP = (rand()%2) ? (int)(temporaire + 0.5f) : (int)(temporaire);
+                
+                temporaire = player_supemon->Max_HP * 1.3f;
+                player_supemon->Max_HP = (rand()%2) ? (int)(temporaire + 0.5f) : (int)(temporaire);
+
+                temporaire = player_supemon->attack * 1.3f;
+                player_supemon->attack = (rand()%2) ? (int)(temporaire + 0.5f) : (int)(temporaire);
+                
+                temporaire = player_supemon->defense * 1.3f;
+                player_supemon->defense = (rand()%2) ? (int)(temporaire + 0.5f) : (int)(temporaire);
+
+                temporaire = player_supemon->evasion * 1.3f;
+                player_supemon->evasion = (rand()%2) ? (int)(temporaire + 0.5f) : (int)(temporaire);
+
+                temporaire = player_supemon->accuracy * 1.3f;
+                player_supemon->accuracy = (rand()%2) ? (int)(temporaire + 0.5f) : (int)(temporaire);
+
+                temporaire = player_supemon->speed * 1.3f;
+                player_supemon->speed = (rand()%2) ? (int)(temporaire + 0.5f) : (int)(temporaire);
+
+                temporaire = player_supemon->base_attack * 1.3f;
+                player_supemon->base_attack = (rand()%2) ? (int)(temporaire + 0.5f) : (int)(temporaire);
+
+                temporaire = player_supemon->base_defense * 1.3f;
+                player_supemon->base_defense = (rand()%2) ? (int)(temporaire + 0.5f) : (int)(temporaire);
+
+                temporaire = player_supemon->base_accuracy * 1.3f;
+                player_supemon->base_accuracy = (rand()%2) ? (int)(temporaire + 0.5f) : (int)(temporaire);
+
+                temporaire = player_supemon->base_evasion * 1.3f;
+                player_supemon->base_evasion = (rand()%2) ? (int)(temporaire + 0.5f) : (int)(temporaire);
+
+                printf("After battle: %s is level %d with %d XP\n",player_supemon->name, player_supemon->level, player_supemon->experience);
+            } else {
+                break;
+            }
+        }
         game_loop(player);
     }
 }
