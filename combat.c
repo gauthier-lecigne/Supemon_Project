@@ -15,6 +15,7 @@ struct SUPEMON generate_wild(struct SUPEMON *player) {
         case 0:
             strcpy(wild.name, "Supmander");
             wild.HP = 10 * wild.level;
+            wild.Max_HP = 2 * wild.HP;
             wild.attack = 1;
             wild.defense = 1;
             wild.evasion = 1;
@@ -38,6 +39,7 @@ struct SUPEMON generate_wild(struct SUPEMON *player) {
         case 1:
             strcpy(wild.name, "Supasaur");
             wild.HP = 9 * wild.level;
+            wild.Max_HP = 2 * wild.HP;
             wild.attack = 1;
             wild.defense = 1;
             wild.evasion = 3;
@@ -61,6 +63,7 @@ struct SUPEMON generate_wild(struct SUPEMON *player) {
         case 2:
             strcpy(wild.name, "Supirtle");
             wild.HP = 11 * wild.level;
+            wild.Max_HP = 2 * wild.HP;
             wild.attack = 1;
             wild.defense = 2;
             wild.evasion = 2;
@@ -108,11 +111,11 @@ int player_turn(struct SUPEMON *player) {
     printf("Your Supemon %s has %d HP \n", player->name, player->HP);
     printf("Choose your move : \n");
     printf("+----------------------------+\n");
-    printf("1 - Move\n");
-    printf("2 - Change Supemon\n");
-    printf("3 - Use Item\n");
-    printf("4 - Run\n");
-    printf("5 - Capture\n");
+    printf("|     1 - Move               |\n");
+    printf("|     2 - Change Supemon     |\n");
+    printf("|     3 - Use Item           |\n");
+    printf("|     4 - Run                |\n");
+    printf("|     5 - Capture            |\n");
     printf("+----------------------------+\n");
     while (choice < 1 || choice > 5) {
         printf("Enter a number between 1 and 5 : "); scanf("%d", &choice);
@@ -180,12 +183,32 @@ void use_item() {
     printf("Not implemented yet ! \n");
 }
 
-void run_away() {
-    printf("Not implemented yet ! \n");
+void run_away(struct JOUEUR *player) {
+    printf("You ran away successfully ! \n");
+    printf("Where do you want to go now ? \n");
+    game_loop(player);
+
 }
 
-void capture() {
-    printf("Not implemented yet ! \n");
+int capture(struct SUPEMON *enemy, struct JOUEUR *player) {
+    float chance_capture = (float)(enemy->Max_HP - enemy->HP) / enemy->Max_HP - 0.5f;
+    if (chance_capture < 0) chance_capture = 0;
+    if (chance_capture > 0.99) chance_capture = 0.99;
+
+    int valeur_random = rand() % 100;
+    if (valeur_random < (int)(chance_capture * 100)) {
+        printf("You captured %s !\n", enemy->name);
+        if (player->nb_supemons < MAX_SUPEMON) {
+            player->supemons[player->nb_supemons] = *enemy;
+            player->nb_supemons += 1;
+        } else {
+            printf("You have the Max Capacity of Supemon so you can't capture %s\n", enemy->name);
+        }
+        return 1;
+    } else {
+        printf("Captured Failed!\n");
+        return 0;
+    }
 }
 
 
@@ -224,10 +247,10 @@ void fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
                     printf("Use Item, not implemented yet ! \n");
                     break;
                 case 4:
-                    printf("Run away, not implemented yet ! \n");
+                    run_away(player);
                     break;
                 case 5:
-                    printf("Capture, not implemented yet ! \n");
+                    capture(&wild_supemon, player);
                     break;
             }
         } else {
@@ -245,9 +268,34 @@ void fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
     }
     if (player_supemon->HP <= 0) {
         printf("Your Supemon %s fainted! You lost the fight.\n", player_supemon->name);
+        printf("Where do you want to do now ?\n");
+        printf("1 - Change Supemon\n");
+        printf("2 - Go to the Supemon Center and leave the fight\n");
+        int choice_suite = 0;
+        while (choice_suite < 1 || choice_suite > 2) {
+            printf("Enter 1 or 2 : "); scanf("%d", &choice_suite);
+            if (choice_suite < 1 ||choice_suite > 2) {
+                printf("Invalid choice, please enter a number between 1 and 2.\n");
+            }
+            if (choice_suite == 1) {
+                if (player->nb_supemons < 2) {
+                    printf("You have no other Supemon, you have to go to the Supemon Center.\n");
+                }
+                int new_index = change_supemon(player->supemons, player->nb_supemons);
+                if (new_index != -1) {
+                    player_supemon = &player->supemons[new_index];
+                    printf("You switched to %s ! \n", player_supemon->name);
+                    fight(player_supemon, player);
+                }
+            } else {
+                printf("You chose to go to the Supemon Center. Your Supemon will be healed there.\n");
+                // besoin d'ajouter l'appel de la fonction Supemon center quand sera finie.
+            }
+        }
     } else {
         printf("You defeated the wild %s!\n", wild_supemon.name);
         player->Supecoins += 100;
         printf("You won 100 Supecoins! You now have %d Supecoins. \n", player->Supecoins);
+        game_loop(player);
     }
 }

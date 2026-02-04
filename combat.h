@@ -10,7 +10,7 @@ int player_turn(struct SUPEMON *player_supemon);
 void player_move(struct SUPEMON *attacker, struct SUPEMON *target);
 int change_supemon(struct SUPEMON *player_supemons, int nb_supemons);
 void use_item();
-void run_away();
-void capture();
+void run_away(struct JOUEUR *player);
+int capture(struct SUPEMON *enemy, struct JOUEUR *player);
 
 #endif
