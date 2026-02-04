@@ -15,7 +15,7 @@ struct SUPEMON generate_wild(struct SUPEMON *player) {
         case 0:
             strcpy(wild.name, "Supmander");
             wild.HP = 10 * wild.level;
-            wild.Max_HP = 2 * wild.HP;
+            wild.Max_HP = wild.HP;
             wild.attack = 1;
             wild.defense = 1;
             wild.evasion = 1;
@@ -39,7 +39,7 @@ struct SUPEMON generate_wild(struct SUPEMON *player) {
         case 1:
             strcpy(wild.name, "Supasaur");
             wild.HP = 9 * wild.level;
-            wild.Max_HP = 2 * wild.HP;
+            wild.Max_HP = wild.HP;
             wild.attack = 1;
             wild.defense = 1;
             wild.evasion = 3;
@@ -63,7 +63,7 @@ struct SUPEMON generate_wild(struct SUPEMON *player) {
         case 2:
             strcpy(wild.name, "Supirtle");
             wild.HP = 11 * wild.level;
-            wild.Max_HP = 2 * wild.HP;
+            wild.Max_HP = wild.HP;
             wild.attack = 1;
             wild.defense = 2;
             wild.evasion = 2;
@@ -158,6 +158,10 @@ void player_move(struct SUPEMON *attacker, struct SUPEMON *target) {
 }
 
 
+
+
+
+
 int change_supemon(struct SUPEMON *player_supemons, int nb_supemons) {
     if (nb_supemons < 2) {
         printf("You only have one Supemon, you can't change!\n");
@@ -178,9 +182,73 @@ int change_supemon(struct SUPEMON *player_supemons, int nb_supemons) {
 }
 
 
-void use_item() {
-    printf("Not implemented yet ! \n");
+
+
+
+
+
+void use_item(struct JOUEUR *player, int *items_used) {
+    if (*items_used >= 4) {
+        printf("You have used the maximum number of items in a fight (4)!\n");
+        return;
+    }
+
+    if (player->inventaire.nb_potions == 0 && player->inventaire.nb_super_potions == 0) {
+        printf("You have no items in your inventory!\n");
+        return;
+    }
+
+    int choix_item = 0;
+
+    do {
+        printf("Choose an item to use : \n");
+        if (player->inventaire.nb_potions > 0)
+            printf("1 - Potion (+%d HP) [You have %d]\n", POTION_HEAL, player->inventaire.nb_potions);
+        if (player->inventaire.nb_super_potions > 0)
+            printf("2 - Super Potion (+%d HP) [You have %d]\n", SUPER_POTION_HEAL, player->inventaire.nb_super_potions);
+        
+        printf("Enter the number of the item you want to use: ");
+        scanf("%d", &choix_item);
+
+        if ((choix_item == 1 && player->inventaire.nb_potions == 0) || 
+            (choix_item == 2 && player->inventaire.nb_super_potions == 0) ||
+            (choix_item < 1 || choix_item > 2)) {
+            printf("Invalid choice, please try again.\n");
+        } else {
+            break;
+        }
+    } while (1);
+    int cible_supemon = 0;
+    do {
+        printf("Choose a Supemon to use the item on : \n");
+        for (int i = 0; i < player->nb_supemons; i++) {
+            printf("%d - %s (HP: %d/%d)\n", i+1, player->supemons[i].name, player->supemons[i].HP, player->supemons[i].Max_HP);
+        }
+        printf("Enter Supemon number: ");
+        scanf("%d", &cible_supemon);
+    } while (cible_supemon < 1 || cible_supemon > player->nb_supemons);
+    cible_supemon -= 1;
+
+    int heal = 0;
+    if (choix_item == 1) {
+        heal = POTION_HEAL;
+        player->inventaire.nb_potions--;
+    } else if (choix_item == 2) {
+        heal = SUPER_POTION_HEAL;
+        player->inventaire.nb_super_potions--;
+    }
+    player->supemons[cible_supemon].HP += heal;
+    if (player->supemons[cible_supemon].HP > player->supemons[cible_supemon].Max_HP)
+        player->supemons[cible_supemon].HP = player->supemons[cible_supemon].Max_HP;
+    printf("You used the item on %s! He healed %d HP and now has %d/%d HP\n",player->supemons[cible_supemon].name, heal,player->supemons[cible_supemon].HP, player->supemons[cible_supemon].Max_HP);
+    (*items_used)++;
 }
+
+
+
+
+
+
 
 void run_away(struct JOUEUR *player) {
     printf("You ran away successfully ! \n");
@@ -188,6 +256,12 @@ void run_away(struct JOUEUR *player) {
     game_loop(player);
 
 }
+
+
+
+
+
+
 
 int capture(struct SUPEMON *enemy, struct JOUEUR *player) {
     float chance_capture = (float)(enemy->Max_HP - enemy->HP) / enemy->Max_HP - 0.5f;
@@ -215,6 +289,7 @@ void fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
     struct SUPEMON wild_supemon = generate_wild(player_supemon);
     printf("A wild %s appeared !\n", wild_supemon.name);
     int current_player_index = 0;
+    int items_used = 0;
     int who_starts;
     if (player_supemon->speed >  wild_supemon.speed) {
         who_starts = 1;
@@ -241,7 +316,8 @@ void fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
                     }
                     break;
                 case 3:
-                    printf("Use Item, not implemented yet ! \n");
+                     use_item(player, &items_used);
+                     break;
                     break;
                 case 4:
                     run_away(player);

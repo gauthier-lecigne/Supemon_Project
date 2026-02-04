@@ -10,6 +10,8 @@ void player_info(struct JOUEUR *player) {
     printf("Enter you player name : "); scanf("%29s", player->name_player);
     printf("Welcome in Supemon World %s !\n", player-> name_player);
     player->Supecoins = 500; player-> nb_supemons = 0; player -> nb_items = 0;
+    player->inventaire.nb_potions = 3;
+    player->inventaire.nb_super_potions = 1;
 }
 
 void starter_choice(struct SUPEMON *supemon) {
@@ -31,6 +33,7 @@ void starter_choice(struct SUPEMON *supemon) {
             strcpy(supemon->name, "Supmander");
             supemon-> level = 1;
             supemon-> HP = 10;
+            supemon-> Max_HP = supemon-> HP;
             supemon-> attack = 1;
             supemon-> defense = 1;
             supemon-> evasion = 1;
@@ -54,6 +57,7 @@ void starter_choice(struct SUPEMON *supemon) {
             strcpy(supemon->name, "Supasaur");
             supemon-> level = 1;
             supemon-> HP = 9;
+            supemon-> Max_HP = supemon-> HP;
             supemon-> attack = 1;
             supemon-> defense = 1;
             supemon-> evasion = 3;
@@ -78,6 +82,7 @@ void starter_choice(struct SUPEMON *supemon) {
             strcpy(supemon->name, "Supirtle");
             supemon-> level = 1;
             supemon-> HP = 11;
+            
             supemon-> attack = 1;
             supemon-> defense = 2;
             supemon-> evasion = 2;

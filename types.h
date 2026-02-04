@@ -2,8 +2,9 @@
 #define STRUCTURES_H
 
 #define MAX_SUPEMON 6
-#define MAX_ITEMS 10
 #define MAX_MOVES 4
+#define POTION_HEAL 5
+#define SUPER_POTION_HEAL 10
 
 struct MOVE {
     char name[30];
@@ -32,13 +33,22 @@ struct SUPEMON {
     int nb_moves;
 };
 
+
+struct INVENTAIRE {
+    int nb_potions;
+    int nb_super_potions;
+};
+
 struct JOUEUR {
     char name_player[30];
     int Supecoins;
     struct SUPEMON supemons[MAX_SUPEMON];
     int nb_supemons;
-    char items[MAX_ITEMS][30];
     int nb_items;
+    struct INVENTAIRE inventaire;
 };
+
+
+
 
 #endif
