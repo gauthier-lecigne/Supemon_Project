@@ -4,6 +4,7 @@
 #include "types.h"
 #include "menu.h"
 #include "combat.h"
+#include <time.h>
 
 void player_info(struct JOUEUR *player) {
     printf("Enter you player name : "); scanf("%29s", player->name_player);
@@ -83,6 +84,7 @@ void starter_choice(struct SUPEMON *supemon) {
             supemon-> accuracy = 1;
             supemon-> speed = 2;
 
+            supemon->nb_moves = 2;
             strcpy(supemon->moves[0].name, "Pound");
             supemon->moves[0].damage = 2;
             supemon->moves[0].attack_boost = 0;
@@ -100,6 +102,7 @@ void starter_choice(struct SUPEMON *supemon) {
 }
 
 int main() {
+    srand(time(NULL));
     struct JOUEUR player;
     struct SUPEMON starter;
     player_info(&player);

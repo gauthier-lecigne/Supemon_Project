@@ -4,6 +4,7 @@
 #include "types.h"
 #include "menu.h"
 #include "combat.h"
+#include <time.h>
 
 struct SUPEMON generate_wild(struct SUPEMON *player) {
     struct SUPEMON wild;
@@ -138,7 +139,7 @@ void player_move(struct SUPEMON *attacker, struct SUPEMON *target) {
     if (move->damage > 0) {
         int damage = calculate_damage(attacker, target, move);
         target->HP -= damage;
-        printf("%s used %s and it made %d damage on %s !\n", attacker->name, move->name, damage, target->name);
+        printf("%s used %s and it made %d damage on %s ! He has now %d HP left\n", attacker->name, move->name, damage, target->name, target->HP);
     }
     if (move->attack_boost > 0) {
         attacker->attack += move->attack_boost;
@@ -246,5 +247,7 @@ void fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
         printf("Your Supemon %s fainted! You lost the fight.\n", player_supemon->name);
     } else {
         printf("You defeated the wild %s!\n", wild_supemon.name);
+        player->Supecoins += 100;
+        printf("You won 100 Supecoins! You now have %d Supecoins. \n", player->Supecoins);
     }
 }

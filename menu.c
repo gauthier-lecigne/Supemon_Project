@@ -3,6 +3,7 @@
 #include "types.h"
 #include "menu.h"
 #include "combat.h"
+#include <time.h>
 
 void game_loop(struct JOUEUR *player) {
     int choix_dir = 0;
