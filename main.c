@@ -9,6 +9,7 @@
 #include "shop.h"
 #include "choix_valide.h"
 #include "inventaire.h"
+#include "save.h"
 
 void player_info(struct JOUEUR *player) {
     printf("Enter you player name : "); scanf("%29s", player->name_player);
@@ -110,8 +111,17 @@ void starter_choice(struct SUPEMON *supemon) {
 
 int main() {
     srand(time(NULL));
-    struct JOUEUR player;
+    struct JOUEUR player; 
     struct SUPEMON starter;
+    if (load_game(&player)) {
+        printf("A saved game was found for player %s. Do you want to load it ? type 1 for yes and 2 for no : ",player.name_player);
+        int choix = valid_choix_int(1, 2);
+        if (choix == 1) {
+            printf("Continuing your saved game...\n");
+            game_loop(&player);
+            return 0;
+        }
+    }
     player_info(&player);
     starter_choice(&starter);
     player.supemons[0] = starter;

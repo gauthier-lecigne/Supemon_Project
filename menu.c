@@ -8,6 +8,9 @@
 #include "shop.h"
 #include "choix_valide.h"
 #include "inventaire.h"
+#include "save.h"
+
+void leave_game(struct JOUEUR *player);
 
 void game_loop(struct JOUEUR *player) {
     int choix_dir = 0;
@@ -37,7 +40,7 @@ void game_loop(struct JOUEUR *player) {
         game_loop(player);
         break;
     case 5:
-        printf("You chose to Leave the Game.... Goodbye !!!\n");
+        leave_game(player);
         break;
     }
 }
@@ -65,4 +68,14 @@ void SupemonCenter(struct JOUEUR *player) {
 void inventory_dir(struct JOUEUR *player) {
     printf("\nWelcome to your Inventory !\n");
     inventory(player);
+}
+
+void leave_game(struct JOUEUR *player) {
+    printf("Do you want to save your game before leaving ? type 1 for yes ans 2 for no : ");
+    int choix = valid_choix_int(1, 2);
+    if (choix == 1) {
+        save_game(player);
+    }
+    printf("Thank you for playing Supemon, see you next time !\n");
+    exit(0);
 }

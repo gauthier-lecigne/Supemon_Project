@@ -9,6 +9,7 @@
 #include "shop.h"
 #include "choix_valide.h"
 #include "inventaire.h"
+#include "save.h"
 
 struct SUPEMON generate_wild(struct SUPEMON *player) {
     struct SUPEMON wild;

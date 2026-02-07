@@ -8,6 +8,7 @@
 #include "shop.h"
 #include "choix_valide.h"
 #include "inventaire.h"
+#include "save.h"
 
 void supemon_shop(struct JOUEUR *player) {
     int choix_user = 0;

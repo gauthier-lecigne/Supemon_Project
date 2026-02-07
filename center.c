@@ -9,6 +9,7 @@
 #include "shop.h"
 #include "choix_valide.h"
 #include "inventaire.h"
+#include "save.h"
 
 void supemon_center(struct JOUEUR *player) {
     for (int i = 0; i < player->nb_supemons; i++) {

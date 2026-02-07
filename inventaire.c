@@ -8,6 +8,7 @@
 #include "shop.h"
 #include "choix_valide.h"
 #include "inventaire.h"
+#include "save.h"
 
 void inventory(struct JOUEUR *player) {
     printf("Your Inventory : \n");

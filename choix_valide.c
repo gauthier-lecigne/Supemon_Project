@@ -8,6 +8,7 @@
 #include "shop.h"
 #include "choix_valide.h"
 #include "inventaire.h"
+#include "save.h"
 
 int valid_choix_int(int min, int max) {
     int number;
