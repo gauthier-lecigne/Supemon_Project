@@ -6,6 +6,7 @@
 #include "combat.h"
 #include <time.h>
 #include "center.h"
+#include "shop.h"
 
 
 void supemon_center(struct JOUEUR *player) {

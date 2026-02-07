@@ -6,6 +6,7 @@
 #include "combat.h"
 #include <time.h>
 #include "center.h"
+#include "shop.h"
 
 void player_info(struct JOUEUR *player) {
     printf("Enter you player name : "); scanf("%29s", player->name_player);

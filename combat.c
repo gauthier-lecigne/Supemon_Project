@@ -6,6 +6,7 @@
 #include "combat.h"
 #include <time.h>
 #include "center.h"
+#include "shop.h"
 
 struct SUPEMON generate_wild(struct SUPEMON *player) {
     struct SUPEMON wild;
@@ -91,17 +92,12 @@ struct SUPEMON generate_wild(struct SUPEMON *player) {
 int calculate_damage(struct SUPEMON *attacker, struct SUPEMON *target, struct MOVE *move) {
     int numerator = attacker->attack * move->damage;
     int denominator = target->defense;
-    int damage;
     if (denominator == 0) denominator = 1;
-    damage = numerator / denominator;
-    if (numerator % denominator != 0) {
-        if (rand() % 2 == 0) {
-            damage += 1;
-        }
+
+    int damage = numerator / denominator;
+    if (numerator % denominator != 0 && rand() % 2 == 0) {
+        damage += 1;
     }
-    attacker->attack += move->attack_boost;
-    target->defense += move->defense_boost;
-    target->evasion += move->evasion_boost;
     if (damage < 0) damage = 0;
     return damage;
 }
@@ -138,23 +134,36 @@ void player_move(struct SUPEMON *attacker, struct SUPEMON *target) {
         printf("Enter the move number : "); scanf("%d", &choix);
     }
 
-    struct MOVE *move = &attacker->moves[choix - 1];
+    struct MOVE *move = &attacker->moves[choix - 1]; 
     if (move->damage > 0) {
-        int damage = calculate_damage(attacker, target, move);
-        target->HP -= damage;
-        printf("%s used %s and it made %d damage on %s ! He has now %d HP left\n", attacker->name, move->name, damage, target->name, target->HP);
+        float chance_hit =(float)attacker->accuracy/(attacker->accuracy + target->evasion)+0.1f;
+    if (chance_hit > 0.95f) chance_hit = 0.95f;
+    int valeur_random = rand() % 100;
+    if (valeur_random >= (int)(chance_hit * 100)) {
+        printf("\n %s used %s but missed !\n", attacker->name, attacker->moves[choix-1].name);
+        return;
     }
+
+    int damage = calculate_damage(attacker, target, move);
+    target->HP -= damage;
+
+    if (target->HP < 0) target->HP = 0;
+        printf("\n %s used %s and it made %d damgage to %s ! He has now %d HP left.\n", attacker->name, move->name, damage, target->name, target->HP);
+    }
+
     if (move->attack_boost > 0) {
         attacker->attack += move->attack_boost;
-        printf("%s's attack increased by %d!\n", attacker->name, move->attack_boost);
+        printf("%s attack increased by %d !\n", attacker->name, move->attack_boost);
     }
+
     if (move->defense_boost > 0) {
         attacker->defense += move->defense_boost;
-        printf("%s's defense increased by %d!\n", attacker->name, move->defense_boost);
+        printf("%s defense increased by %d !\n", attacker->name, move->defense_boost);
     }
+
     if (move->evasion_boost > 0) {
         attacker->evasion += move->evasion_boost;
-        printf("%s's evasion increased by %d!\n", attacker->name, move->evasion_boost);
+        printf("%s evasion increased by %d !\n", attacker->name, move->evasion_boost);
     }
 }
 
@@ -257,22 +266,22 @@ int run_away(struct JOUEUR *player) {
 int capture(struct SUPEMON *enemy, struct JOUEUR *player) {
     float chance_capture = (float)(enemy->Max_HP - enemy->HP) / enemy->Max_HP - 0.5f;
     if (chance_capture < 0) chance_capture = 0;
-    if (chance_capture > 0.99) chance_capture = 0.99;
+    if (chance_capture > 0.99f) chance_capture = 0.99f;
 
     int valeur_random = rand() % 100;
-    if (valeur_random < (int)(chance_capture * 100)) {
-        printf("You captured %s !\n", enemy->name);
-        if (player->nb_supemons < MAX_SUPEMON) {
-            player->supemons[player->nb_supemons] = *enemy;
-            player->nb_supemons += 1;
-        } else {
-            printf("You have the Max Capacity of Supemon so you can't capture %s\n", enemy->name);
-        }
-        return 1;
-    } else {
-        printf("Captured Failed!\n");
+    if (valeur_random >= (int)(chance_capture * 100)) {
+        printf("Czptured Failed ! The wild %s escaped !\n", enemy->name);
         return 0;
     }
+    if (player->nb_supemons >= MAX_SUPEMON) {
+        printf("Your team is full, you can't cature %s !\n", enemy->name);
+        return 0;
+    }
+
+    player->supemons[player->nb_supemons] = *enemy;
+    player->nb_supemons += 1;
+    printf("You captured the wild %s ! He is now in you team !\n", enemy->name);
+    return 1;
 }
 
 
@@ -307,8 +316,8 @@ int fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
                     }
                     break;
                 case 3:
-                     use_item(player, &items_used);
-                     break;
+                    use_item(player, &items_used);
+                    break;
                     break;
                 case 4:
                     if (run_away(player)) {
@@ -317,19 +326,32 @@ int fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
                     }
                     break;
                 case 5:
-                    capture(&wild_supemon, player);
+                    if (capture(&wild_supemon, player)) {
+                        game_loop(player);;
+                        return 1;
+                    }
                     break;
             }
         } else {
             int move_index = rand() % wild_supemon.nb_moves;
             struct MOVE *move = &wild_supemon.moves[move_index];
-            int damage = calculate_damage(&wild_supemon, player_supemon, move);
-            player_supemon->HP -= damage;
+            
+            float chance_hit = (float)wild_supemon.accuracy / (wild_supemon.accuracy + player_supemon->evasion) + 0.1f;
+            if (chance_hit > 0.95f) chance_hit = 0.95f;
+            int valeur_random = rand() % 100;
 
             printf("\n--- ENEMY TURN ---\n");
-        printf("The wild %s used %s!\n", wild_supemon.name, move->name);
-        printf("It dealt %d damage to your %s.\n", damage, player_supemon->name);
-        printf("------------------\n\n");
+            printf("The wild %s used %s :\n", wild_supemon.name, move->name);
+
+            if (valeur_random >= (int)(chance_hit * 100)) {
+                printf("His attack missed !\n");
+            } else {
+                int damage = calculate_damage(&wild_supemon, player_supemon, move);
+                player_supemon->HP -= damage;
+                if (player_supemon->HP < 0) player_supemon->HP = 0;
+                printf("It made %d damage to your %s ! He has now %d HP left.\n", damage, player_supemon->name, player_supemon->HP);
+            }
+            printf("--- END OF ENEMY TURN --- \n\n");
         }
         who_starts = !who_starts;
     }
