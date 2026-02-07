@@ -14,11 +14,13 @@ void supemon_shop(struct JOUEUR *player) {
         printf("You have %d Supecoins\n", player->Supecoins);
         printf("Your inventory : Potions %d | Super Potions %d\n", player->inventaire.nb_potions, player->inventaire.nb_super_potions);
 
-        printf("+---------------------------------------+\n");
-        printf("| 1 - Buy Potion (50 Supecoins)         |\n");
-        printf("| 2 - Buy Super Potion (300 Supecoins)  |\n");
-        printf("| 3 - Leave The Shop                    |\n");
-        printf("+---------------------------------------+\n");
+        printf("+----------------------------------------+\n");
+        printf("| 1 - Buy Potion (100 Supecoins)         |\n");
+        printf("| 2 - Buy Super Potion (300 Supecoins)   |\n");
+        printf("| 3 - Sell a Potion (50 Supecoins)       |\n");
+        printf("| 4 - Sell a Super Potion (150 Supecoins)|\n");
+        printf("| 5 - Leave The Shop                     |\n");
+        printf("+----------------------------------------+\n");
 
         printf("Your Choice : "), scanf("%d", &choix_user);
         switch (choix_user) {
@@ -41,12 +43,25 @@ void supemon_shop(struct JOUEUR *player) {
                 }
                 break;
             case 3:
-                printf("You chose to leave the Shop ... Goodbye !\n");
-                game_loop(player);
-                return;
-            
+                if (player->inventaire.nb_potions > 0) {
+                    player->Supecoins += POTION_PRICE / 2;
+                    player->inventaire.nb_potions -= 1;
+                    printf("You sold a Potion.\n");
+                } else {
+                    printf("You don't have any potions to sell.\n");
+                }
+                break;
+            case 4:
+                if (player->inventaire.nb_super_potions > 0) {
+                    player->Supecoins += SUPER_POTION_PRICE / 2;
+                    player->inventaire.nb_super_potions -= 1;
+                    printf("You sold a Super Potion.\n");
+                } else {
+                    printf("You don't have any Super Potions to sell.\n");
+                }
+                break;
             default:
-                printf("Invalid Choice, please choose a number between 1 and 3.\n");
+                printf("Invalid Choice, please choose a number between 1 and 5.\n");
         }
     }
 }
