@@ -7,6 +7,8 @@
 #include <time.h>
 #include "center.h"
 #include "shop.h"
+#include "choix_valide.h"
+#include "inventaire.h"
 
 struct SUPEMON generate_wild(struct SUPEMON *player) {
     struct SUPEMON wild;
@@ -114,12 +116,8 @@ int player_turn(struct SUPEMON *player) {
     printf("|     4 - Run                |\n");
     printf("|     5 - Capture            |\n");
     printf("+----------------------------+\n");
-    while (choice < 1 || choice > 5) {
-        printf("Enter a number between 1 and 5 : "); scanf("%d", &choice);
-        if (choice < 1 || choice > 5) {
-            printf("Invalid, please enter a number between 1 and 5\n");
-        }
-    }
+    printf("Enter the number of your choice : ");
+    choice = valid_choix_int(1, 5);
     return choice;
 }
 
@@ -131,7 +129,8 @@ void player_move(struct SUPEMON *attacker, struct SUPEMON *target) {
     }
 
     while (choix < 1 || choix > attacker->nb_moves) {
-        printf("Enter the move number : "); scanf("%d", &choix);
+        printf("Enter the move number : ");
+        choix = valid_choix_int(1, attacker->nb_moves);
     }
 
     struct MOVE *move = &attacker->moves[choix - 1]; 
@@ -184,15 +183,14 @@ int change_supemon(struct SUPEMON *player_supemons, int nb_supemons, struct JOUE
         printf("%d - %s (HP: %d)\n", i+1, player_supemons[i].name, player_supemons[i].HP);
     }
     while (choix < 1 || choix > nb_supemons) {
-        printf("Enter the number of the Supemon you want to switch to : "); scanf("%d", &choix);
+        printf("Enter the number of the Supemon you want to switch to : ");
+        choix = valid_choix_int(1, nb_supemons);
         if (choix < 1 || choix > nb_supemons) {
             printf("Invalid, choose a number between 1 and %d\n", nb_supemons);
         }
     }
     return choix - 1;
 }
-
-
 
 
 
@@ -256,9 +254,17 @@ void use_item(struct JOUEUR *player, int *items_used) {
 }
 
 
-int run_away(struct JOUEUR *player) {
-    printf("You ran away successfully ! \n");
-    return 1;
+int run_away(struct JOUEUR *player, struct SUPEMON *enemy) {
+    int chance_run = player->supemons[0].speed  / (float)(player->supemons[0].speed + enemy->speed);
+    if (chance_run > 0.95f) chance_run = 0.95f;
+    int valeur_random = rand() % 100;
+    if (valeur_random >= (int)(chance_run * 100)) {
+        printf("You failed to run away ! The wild %s is still there !\n", enemy->name);
+        return 0;
+    } else {
+        printf("You successfully ran away from the wild %s !\n", enemy->name);
+        return 1;
+    }
 
 }
 
@@ -320,7 +326,7 @@ int fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
                     break;
                     break;
                 case 4:
-                    if (run_away(player)) {
+                    if (run_away(player, &wild_supemon)) {
                         game_loop(player);
                         return 1;
                     }
@@ -362,10 +368,8 @@ int fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
         printf("2 - Go to the Supemon Center and leave the fight\n");
         int choice_suite = 0;
         while (choice_suite < 1 || choice_suite > 2) {
-            printf("Enter 1 or 2 : "); scanf("%d", &choice_suite);
-            if (choice_suite < 1 ||choice_suite > 2) {
-                printf("Invalid choice, please enter a number between 1 and 2.\n");
-            }
+            printf("Enter 1 or 2 : ");
+            choice_suite = valid_choix_int(1, 2);
             if (choice_suite == 1) {
                 if (player->nb_supemons < 2) {
                     printf("You have no other Supemon, you have to go to the Supemon Center.\n");

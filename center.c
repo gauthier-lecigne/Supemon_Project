@@ -7,7 +7,8 @@
 #include <time.h>
 #include "center.h"
 #include "shop.h"
-
+#include "choix_valide.h"
+#include "inventaire.h"
 
 void supemon_center(struct JOUEUR *player) {
     for (int i = 0; i < player->nb_supemons; i++) {

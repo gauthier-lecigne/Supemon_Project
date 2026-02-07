@@ -6,6 +6,8 @@
 #include <time.h>
 #include "center.h"
 #include "shop.h"
+#include "choix_valide.h"
+#include "inventaire.h"
 
 void supemon_shop(struct JOUEUR *player) {
     int choix_user = 0;
@@ -22,7 +24,8 @@ void supemon_shop(struct JOUEUR *player) {
         printf("| 5 - Leave The Shop                     |\n");
         printf("+----------------------------------------+\n");
 
-        printf("Your Choice : "), scanf("%d", &choix_user);
+        printf("Your Choice : ");
+        choix_user = valid_choix_int(1, 5);
         switch (choix_user) {
             case 1:
                 if (player->Supecoins >= POTION_PRICE) {
@@ -60,6 +63,9 @@ void supemon_shop(struct JOUEUR *player) {
                     printf("You don't have any Super Potions to sell.\n");
                 }
                 break;
+            case 5:
+                printf("You chose to leave the Shop... Goodbye !\n");
+                return;
             default:
                 printf("Invalid Choice, please choose a number between 1 and 5.\n");
         }

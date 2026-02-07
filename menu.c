@@ -6,6 +6,8 @@
 #include <time.h>
 #include "center.h"
 #include "shop.h"
+#include "choix_valide.h"
+#include "inventaire.h"
 
 void game_loop(struct JOUEUR *player) {
     int choix_dir = 0;
@@ -14,14 +16,11 @@ void game_loop(struct JOUEUR *player) {
     printf("|    1 - Into the wild         |\n");
     printf("|    2 - In the shop           |\n");
     printf("|    3 - In the Supemon Center |\n");
-    printf("|    4 - Leave the Game        |\n");
+    printf("|    4 - Inventory             |\n");
+    printf("|    5 - Leave the Game        |\n");
     printf("+------------------------------+\n");
-    while (choix_dir < 1 || choix_dir > 4) {
-        printf("Choose where do you want to go by typing numbers between 1 and 4 :"); scanf("%d",&choix_dir);
-        if (choix_dir < 1 ||choix_dir > 4) {
-            printf("Invalid choice, please write a number between 1 and 4 : ");
-        }
-    }
+    printf("Enter the number of your choice : ");
+    choix_dir = valid_choix_int(1, 5);
     switch (choix_dir)
     {
     case 1:
@@ -33,7 +32,11 @@ void game_loop(struct JOUEUR *player) {
     case 3:
         SupemonCenter(player);
         break;
-    case 4:
+    case 4: 
+        inventory(player);
+        game_loop(player);
+        break;
+    case 5:
         printf("You chose to Leave the Game.... Goodbye !!!\n");
         break;
     }
@@ -57,4 +60,9 @@ void SupemonCenter(struct JOUEUR *player) {
     }
     printf("\n");
     game_loop(player);
+}
+
+void inventory_dir(struct JOUEUR *player) {
+    printf("\nWelcome to your Inventory !\n");
+    inventory(player);
 }

@@ -5,6 +5,7 @@
 #define MAX_MOVES 4
 #define POTION_HEAL 5
 #define SUPER_POTION_HEAL 10
+#define SUPER_BONBON 1
 
 struct MOVE {
     char name[30];
@@ -37,6 +38,7 @@ struct SUPEMON {
 struct INVENTAIRE {
     int nb_potions;
     int nb_super_potions;
+    int nb_super_bonbons;
 };
 
 struct JOUEUR {

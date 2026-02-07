@@ -7,6 +7,8 @@
 #include <time.h>
 #include "center.h"
 #include "shop.h"
+#include "choix_valide.h"
+#include "inventaire.h"
 
 void player_info(struct JOUEUR *player) {
     printf("Enter you player name : "); scanf("%29s", player->name_player);
@@ -14,6 +16,7 @@ void player_info(struct JOUEUR *player) {
     player->Supecoins = 500; player-> nb_supemons = 0; player -> nb_items = 0;
     player->inventaire.nb_potions = 3;
     player->inventaire.nb_super_potions = 1;
+    player->inventaire.nb_super_bonbons = 1;
 }
 
 void starter_choice(struct SUPEMON *supemon) {
@@ -24,11 +27,8 @@ void starter_choice(struct SUPEMON *supemon) {
     printf("|    2 - Supasaur            |\n");
     printf("|    3 - Supirtle            |\n");
     printf("+----------------------------+\n");
-    while(choix < 1 || choix > 3) {
-        printf("Choose you starter by choosing 1, 2 or 3 : ");scanf("%d", &choix);
-        if (choix < 1 || choix > 3) {
-            printf("Invalid choice, plense enter the value 1, 2 or 3\n");
-        }
+    printf("Enter the number of the Supemon you want to choose : ");
+    choix = valid_choix_int(1, 3);
     switch (choix)
         {
         case 1:
@@ -104,9 +104,9 @@ void starter_choice(struct SUPEMON *supemon) {
             supemon->moves[1].defense_boost = 1;
             supemon->moves[1].evasion_boost = 0;
             break;
-        }
     }
 }
+
 
 int main() {
     srand(time(NULL));
