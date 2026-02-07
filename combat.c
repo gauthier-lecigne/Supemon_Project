@@ -5,6 +5,7 @@
 #include "menu.h"
 #include "combat.h"
 #include <time.h>
+#include "center.h"
 
 struct SUPEMON generate_wild(struct SUPEMON *player) {
     struct SUPEMON wild;
@@ -355,7 +356,8 @@ int fight(struct SUPEMON *player_supemon, struct JOUEUR *player) {
                 }
             } else {
                 printf("You chose to go to the Supemon Center. Your Supemon will be healed there.\n");
-                // besoin d'ajouter l'appel de la fonction Supemon center quand sera finie.
+                SupemonCenter(player);
+                return 1;
             }
         }
     } else {

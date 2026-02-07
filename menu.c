@@ -4,6 +4,8 @@
 #include "menu.h"
 #include "combat.h"
 #include <time.h>
+#include "center.h"
+#include "shop.h"
 
 void game_loop(struct JOUEUR *player) {
     int choix_dir = 0;
@@ -44,9 +46,15 @@ void InTheWild(struct JOUEUR *player) {
 }
 
 void InTheShop(struct JOUEUR *player) {
-    printf("Welcome to the shop ! \n");
+    supemon_shop(player);
 }
 
 void SupemonCenter(struct JOUEUR *player) {
-    printf("Welcome to the Supemon Center ! \n");
+    printf("\nWelcome to the Supemon Center !\n");
+    supemon_center(player);
+    for (int i = 0; i < player->nb_supemons; i++) {
+        printf("%s : %d/%d HP\n", player->supemons[i].name, player->supemons[i].HP, player->supemons[i].Max_HP);
+    }
+    printf("\n");
+    game_loop(player);
 }
