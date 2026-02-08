@@ -281,7 +281,7 @@ int capture(struct SUPEMON *enemy, struct JOUEUR *player) {
 
     int valeur_random = rand() % 100;
     if (valeur_random >= (int)(chance_capture * 100)) {
-        printf("Czptured Failed ! The wild %s escaped !\n", enemy->name);
+        printf("Captured Failed ! The wild %s escaped !\n", enemy->name);
         return 0;
     }
     if (player->nb_supemons >= MAX_SUPEMON) {
@@ -291,6 +291,7 @@ int capture(struct SUPEMON *enemy, struct JOUEUR *player) {
 
     player->supemons[player->nb_supemons] = *enemy;
     player->nb_supemons += 1;
+    player->Supecoins += 100;
     printf("You captured the wild %s ! He is now in you team !\n", enemy->name);
     return 1;
 }
