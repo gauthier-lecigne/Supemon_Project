@@ -7,6 +7,7 @@
 #define SUPER_POTION_HEAL 10
 #define SUPER_BONBON 1
 
+
 struct MOVE {
     char name[30];
     int damage;
