@@ -123,49 +123,53 @@ int player_turn(struct SUPEMON *player) {
 }
 
 void player_move(struct SUPEMON *attacker, struct SUPEMON *target) {
-    int choix = 0;
-    printf("Choose a move for your Supemon %s : \n", attacker->name);
+    printf("Choose a move for your Supemon %s:\n", attacker->name);
     for (int i = 0; i < attacker->nb_moves; i++) {
-        printf("%d - %s \n", i + 1, attacker->moves[i].name);
+        printf("%d - %s\n", i + 1, attacker->moves[i].name);
     }
 
+    int choix = 0;
     while (choix < 1 || choix > attacker->nb_moves) {
-        printf("Enter the move number : ");
+        printf("Enter the move number: ");
         choix = valid_choix_int(1, attacker->nb_moves);
     }
 
-    struct MOVE *move = &attacker->moves[choix - 1]; 
+    struct MOVE *move = &attacker->moves[choix - 1];
+
     if (move->damage > 0) {
-        float chance_hit =(float)attacker->accuracy/(attacker->accuracy + target->evasion)+0.1f;
-    if (chance_hit > 0.95f) chance_hit = 0.95f;
-    int valeur_random = rand() % 100;
-    if (valeur_random >= (int)(chance_hit * 100)) {
-        printf("\n %s used %s but missed !\n", attacker->name, attacker->moves[choix-1].name);
-        return;
-    }
+        float chance_hit = (float)attacker->accuracy / (attacker->accuracy + target->evasion) + 0.1f;
+        if (chance_hit > 0.95f) chance_hit = 0.95f;
 
-    int damage = calculate_damage(attacker, target, move);
-    target->HP -= damage;
+        int valeur_random = rand() % 100;
+        if (valeur_random >= (int)(chance_hit * 100)) {
+            printf("\n%s used %s but missed!\n", attacker->name, move->name);
+            return;
+        }
 
-    if (target->HP < 0) target->HP = 0;
-        printf("\n %s used %s and it made %d damgage to %s ! He has now %d HP left.\n", attacker->name, move->name, damage, target->name, target->HP);
+        int damage = calculate_damage(attacker, target, move);
+        target->HP -= damage;
+        if (target->HP < 0) target->HP = 0;
+
+        printf("\n%s used %s and dealt %d damage to %s! (%d HP left)\n",
+               attacker->name, move->name, damage, target->name, target->HP);
     }
 
     if (move->attack_boost > 0) {
         attacker->attack += move->attack_boost;
-        printf("%s attack increased by %d !\n", attacker->name, move->attack_boost);
+        printf("%s's attack increased by %d!\n", attacker->name, move->attack_boost);
     }
 
     if (move->defense_boost > 0) {
         attacker->defense += move->defense_boost;
-        printf("%s defense increased by %d !\n", attacker->name, move->defense_boost);
+        printf("%s's defense increased by %d!\n", attacker->name, move->defense_boost);
     }
 
     if (move->evasion_boost > 0) {
         attacker->evasion += move->evasion_boost;
-        printf("%s evasion increased by %d !\n", attacker->name, move->evasion_boost);
+        printf("%s's evasion increased by %d!\n", attacker->name, move->evasion_boost);
     }
 }
+
 
 
 
@@ -256,7 +260,7 @@ void use_item(struct JOUEUR *player, int *items_used) {
 
 
 int run_away(struct JOUEUR *player, struct SUPEMON *enemy) {
-    int chance_run = player->supemons[0].speed  / (float)(player->supemons[0].speed + enemy->speed);
+    float chance_run = player->supemons[0].speed  / (float)(player->supemons[0].speed + enemy->speed);
     if (chance_run > 0.95f) chance_run = 0.95f;
     int valeur_random = rand() % 100;
     if (valeur_random >= (int)(chance_run * 100)) {
